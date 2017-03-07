@@ -1,3 +1,6 @@
+# python
+__pycache__/**
+*.pyc
 
 # Created by https://www.gitignore.io/api/emacs
 
