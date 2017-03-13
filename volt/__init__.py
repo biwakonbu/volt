@@ -4,6 +4,8 @@ __author__ = 'Ryo HIGASHIGAWA'
 __version__ = '0.0.1'
 __licencse__ = 'MIT'
 
+# Routing classes.
+
 
 class RoutingTree(object):
     """URL Routing Tree Structure."""
@@ -28,6 +30,7 @@ class RoutingTree(object):
         self.pos = self.pos.next_nodes[key]
 
     def return_root(self):
+        """move to root node."""
         self.pos = self.root
 
     def config(self):
@@ -42,7 +45,13 @@ class RoutingTreeNode(object):
     """Tree Node class."""
 
     def __init__(self, x='', pre_node=None, next_nodes=None):
-        """tree node initialize."""
+        """tree node initialize.
+
+        Args:
+            x          (str): node value and default blank string.
+            pre_node   (RoutingTreeNode): parent node and default None type.
+            next_nodes (RoutingTreeNode): children node and default None type.
+        """
         self.x = x
         self.pre_node = pre_node
         if next_nodes is None:
@@ -55,7 +64,14 @@ class RoutingTreeNode(object):
         return self.pre_node is None
 
     def insert(self, key, node):
-        """node insert to next_nodes."""
+        """node insert to next_nodes.
+
+        Args:
+            key  (str): next nodes key.
+            node (RoutingTreeNode): next node.
+        Todo:
+            * change to specific routing duplicate error because raise is generic.
+        """
         if self.next_nodes.get(key, None) is None:
             self.next_nodes[key] = node
         else:
@@ -74,8 +90,9 @@ class Routing(object):
     def add(cls, routings):
         """add a routing.
 
-        :rtype tuple routings: routing tuples.
-                               ('/api/routing/', 'execute_method')
+        Args:
+            routings (tuple): routing tuples.
+                              ('/api/routing/', 'execute_method')
         """
         for path, dest in routings:
             names = cls.split(path)
