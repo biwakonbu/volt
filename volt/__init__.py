@@ -31,6 +31,7 @@ class RoutingTree(object):
         self.pos = self.root
 
     def config(self):
+        """output routing to standard I/O."""
         print('method\trouting')
         print('{}'.format('-' * 60))
         for r, m in sorted(self.routing.items(), key=lambda x: x[1]):
@@ -71,7 +72,11 @@ class Routing(object):
 
     @classmethod
     def add(cls, routings):
-        """add a routing."""
+        """add a routing.
+
+        :rtype tuple routings: routing tuples.
+                               ('/api/routing/', 'execute_method')
+        """
         for path, dest in routings:
             names = cls.split(path)
             for key in names:
@@ -82,10 +87,9 @@ class Routing(object):
             cls.tree.return_root()
 
     @classmethod
-    def config(cls):
+    def routing(cls):
         """output routing to standard I/O."""
-        print(cls._routing)
-
+        cls.tree.config()
 
     @classmethod
     def split(cls, path):
