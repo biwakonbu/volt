@@ -24,7 +24,7 @@ class RoutingTree(object):
 
     def move_next_node(self, key):
         """move into tree to next node."""
-        self.pos = self.pos[key]
+        self.pos = self.pos.next_nodes[key]
 
 
 class RoutingTreeNode(object):
