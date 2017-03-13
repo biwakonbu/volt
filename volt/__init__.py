@@ -30,20 +30,23 @@ class RoutingTree(object):
 class RoutingTreeNode(object):
     """Tree Node class."""
 
-    def __init__(self, x='', pre_node=None, next_nodes={}):
+    def __init__(self, x='', pre_node=None, next_nodes=None):
         """tree node initialize."""
         self.x = x
         self.pre_node = pre_node
-        self.next_nodes = next_nodes
+        if next_nodes is None:
+            self.next_nodes = {}
+        elif isinstance(next_nodes, dict):
+            self.next_nodes = next_nodes
 
     def is_root(self):
         """is root?."""
         return self.pre_node is None
 
-    def insert(self, key, x):
+    def insert(self, key, node):
         """node insert to next_nodes."""
-        if self.next_nodes.get(x, None) is None:
-            self.next_nodes[key] = x
+        if self.next_nodes.get(key, None) is None:
+            self.next_nodes[key] = node
         else:
             raise
 
@@ -60,10 +63,12 @@ class Routing(object):
     def add(cls, routings):
         """add a routing."""
         for path, dest in routings:
-            l = cls.split(path)
-            for x in l:
+            names = cls.split(path)
+            for key in names:
+                cls.routing_tree.pos.insert(key)
                 print(cls.routing_tree.pos)
-                cls.routing_tree.pos.move_next_node(x)
+                cls.routing_tree.move_next_node(key)
+
 
     @classmethod
     def config(cls):
