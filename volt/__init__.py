@@ -17,6 +17,7 @@ class RoutingTree(object):
         else:
             raise
         self.pos = self.root
+        self.routing = {}
 
     def find_node_and_insert(self, key, x, path=[]):
         """find node and insert."""
@@ -25,6 +26,15 @@ class RoutingTree(object):
     def move_next_node(self, key):
         """move into tree to next node."""
         self.pos = self.pos.next_nodes[key]
+
+    def return_root(self):
+        self.pos = self.root
+
+    def config(self):
+        print('method\trouting')
+        print('{}'.format('-' * 60))
+        for r, m in sorted(self.routing.items(), key=lambda x: x[1]):
+            print('{}\t{}'.format(m, r))
 
 
 class RoutingTreeNode(object):
@@ -57,7 +67,7 @@ class RoutingTreeNode(object):
 class Routing(object):
     """URL mapping class."""
 
-    routing_tree = RoutingTree()
+    tree = RoutingTree()
 
     @classmethod
     def add(cls, routings):
@@ -65,10 +75,11 @@ class Routing(object):
         for path, dest in routings:
             names = cls.split(path)
             for key in names:
-                cls.routing_tree.pos.insert(key)
-                print(cls.routing_tree.pos)
-                cls.routing_tree.move_next_node(key)
-
+                if cls.tree.pos.next_nodes.get(key, None) is None:
+                    cls.tree.pos.insert(key, RoutingTreeNode('', cls.tree.pos))
+                cls.tree.move_next_node(key)
+            cls.tree.routing[path] = dest
+            cls.tree.return_root()
 
     @classmethod
     def config(cls):
