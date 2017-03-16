@@ -35,8 +35,8 @@ class RoutingTree(object):
 
     def config(self):
         """output routing to standard I/O."""
-        sorted_routing = sorted(self.routing.items(), key=lambda x: x[1])
-        max_method_length = max(map(lambda x: len(x[1]), sorted_routing))
+        sorted_routing = sorted(self.routing.items(), key=lambda x: x[1].__name__)
+        max_method_length = max(map(lambda x: len(x[1].__name__), sorted_routing))
 
         def output(m, r):
             blank = ' ' * (max_method_length - len(m)) + '\t'
@@ -46,7 +46,7 @@ class RoutingTree(object):
         print('{}'.format('-' * 60))
 
         for r, m in sorted_routing:
-            print(output(m, r))
+            print(output(m.__name__, r))
 
 
 class RoutingTreeNode(object):
@@ -56,7 +56,7 @@ class RoutingTreeNode(object):
         """tree node initialize.
 
         Args:
-            x          (str): node value and default blank string.
+            x          (function): execute function when the route match.
             pre_node   (RoutingTreeNode): parent node and default None type.
             next_nodes (RoutingTreeNode): children node and default None type.
         """
@@ -109,12 +109,22 @@ class Routing(object):
                     cls.tree.pos.insert(key, RoutingTreeNode('', cls.tree.pos))
                 cls.tree.move_next_node(key)
             cls.tree.routing[path] = dest
+            cls.tree.pos.x = dest
             cls.tree.return_root()
 
     @classmethod
     def routing(cls):
         """output routing to standard I/O."""
         cls.tree.config()
+
+    @classmethod
+    def match(cls, path):
+        """routing match the method execute."""
+        names = cls.split(path)
+        for key in names:
+            if cls.tree.pos.next_nodes.get(key, None):
+                cls.tree.move_next_node(key)
+        return cls.tree.pos.x()
 
     @staticmethod
     def split(path):
