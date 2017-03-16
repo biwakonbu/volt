@@ -116,7 +116,7 @@ class Routing(object):
         """output routing to standard I/O."""
         cls.tree.config()
 
-    @classmethod
-    def split(cls, path):
+    @staticmethod
+    def split(path):
         """split routing path."""
         return path.split('/')[1:]
