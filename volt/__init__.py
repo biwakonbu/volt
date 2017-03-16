@@ -35,10 +35,18 @@ class RoutingTree(object):
 
     def config(self):
         """output routing to standard I/O."""
-        print('method\trouting')
+        sorted_routing = sorted(self.routing.items(), key=lambda x: x[1])
+        max_method_length = max(map(lambda x: len(x[1]), sorted_routing))
+
+        def output(m, r):
+            blank = ' ' * (max_method_length - len(m)) + '\t'
+            return '{}{}{}'.format(m, blank, r)
+
+        print(output('method', 'routing'))
         print('{}'.format('-' * 60))
-        for r, m in sorted(self.routing.items(), key=lambda x: x[1]):
-            print('{}\t{}'.format(m, r))
+
+        for r, m in sorted_routing:
+            print(output(m, r))
 
 
 class RoutingTreeNode(object):
