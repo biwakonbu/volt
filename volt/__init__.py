@@ -125,6 +125,8 @@ class Routing(object):
         names = cls.split(path)
         for key in names:
             if cls.tree.pos.next_nodes.get(key, None):
+                if key == '':
+                    raise
                 cls.tree.move_next_node(key)
         return cls.tree.pos.x()
 
