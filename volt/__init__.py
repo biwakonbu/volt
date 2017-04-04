@@ -104,11 +104,13 @@ class Routing(object):
         """
         for path, dest in routings:
             names = cls.split(path)
-            for key in names:
+            for i, key in enumerate(names):
+                if 1 < len(names) and 0 < i and key == '':
+                    break
+                elif key == '':
+                    continue
                 if key and cls.tree.pos.next_nodes.get(key, None) is None:
                     cls.tree.pos.insert(key, RoutingTreeNode('', cls.tree.pos))
-                elif key == '':
-                    break
                 cls.tree.move_next_node(key)
             cls.tree.routing[path] = dest
             cls.tree.pos.x = dest
@@ -123,7 +125,9 @@ class Routing(object):
     def match(cls, path):
         """routing match the method execute."""
         names = cls.split(path)
-        for key in names:
+        for i, key in enumerate(names):
+            if i == 0 and key == '':
+                continue
             if cls.tree.pos.next_nodes.get(key, None):
                 if key == '':
                     raise
@@ -161,7 +165,7 @@ from wsgiref import simple_server
 
 def server(env, res):
     res('200 OK', [('Content-Type', 'text/plain')])
-    return Routing.match(env['PATH_INFO'])
+    return iter(Routing.match(env['PATH_INFO']))
 
 def app():
     wsgi_server = simple_server.make_server('', 5000, server)
