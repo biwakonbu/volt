@@ -105,8 +105,10 @@ class Routing(object):
         for path, dest in routings:
             names = cls.split(path)
             for key in names:
-                if cls.tree.pos.next_nodes.get(key, None) is None:
+                if key and cls.tree.pos.next_nodes.get(key, None) is None:
                     cls.tree.pos.insert(key, RoutingTreeNode('', cls.tree.pos))
+                elif key == '':
+                    break
                 cls.tree.move_next_node(key)
             cls.tree.routing[path] = dest
             cls.tree.pos.x = dest
