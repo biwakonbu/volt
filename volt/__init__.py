@@ -130,3 +130,35 @@ class Routing(object):
     def split(path):
         """split routing path."""
         return path.split('/')[1:]
+
+
+# Views
+
+class UndefinedHTTPMethodError(Exception): pass;
+class UndefinedGETMethodError(UndefinedHTTPMethodError): pass;
+class UndefinedPOSTMethodError(UndefinedHTTPMethodError): pass;
+
+class View(object):
+
+    @classmethod
+    def as_view(cls):
+        pass
+
+    def get(*args, **kwargs):
+        raise UndefinedGETMethodError
+
+    def post(*args, **kwargs):
+        raise UndefinedPOSTMethodError
+
+
+# WSGI application
+
+from wsgiref import simple_server
+
+def server(env, res):
+    res('200 OK', [('Content-Type', 'text/plain')])
+    return Routing.match(env['PATH_INFO'])
+
+def app():
+    wsgi_server = simple_server.make_server('', 5000, server)
+    wsgi_server.serve_forever()
